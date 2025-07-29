@@ -25,16 +25,29 @@ void SOC_Estimator_Update(float current, float dt) {
    
 }
 
+// simulate current values
+
+void Simulate_Profile(float* profile, int size, float dt){
+    for (int t = 0; t < size; t++){
+        float current = profile[t];
+        SOC_Estimator_Update(current, dt);
+        printf("Time: %d sec | Current: %.2f A | SoC: %.2f%%\n", t, current, soc * 100.0f);
+        sleep(1);
+    }
+}
+
 
 
 int main() {
-    float current = 1.0f;  // Simulate 1A discharge
+      // Profile 1: Alternating load (e.g., city driving)
+    float current_profile1[10] = {0.5f, 1.0f, 2.0f, -0.5f, -1.0f, 0.0f, 1.5f, 0.0f, -2.0f, 0.5f};
+
     float dt = 1.0f;       // 1-second interval
 
     for (int t = 0; t < 3600; t++) {  // Simulate 1 hour
-        SOC_Estimator_Update(current, dt);
-        printf("Time: %d sec | SoC: %.2f%%\n", t, soc * 100.0f);
-        sleep(1);
+       
+        printf("=== Simulating Current Profile 1 ===\n");
+        Simulate_Profile(current_profile1, 10, dt);
     }
 
     return 0;
